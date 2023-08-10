@@ -1,7 +1,5 @@
 import pandas as pd
 
-from app.db.session import SessionLocal
-
 
 class StoreRepo:
     @classmethod
@@ -46,13 +44,10 @@ class StoreRepo:
         )
 
         return results_df
-    
 
     @classmethod
     def get_all_store_ids(cls, session):
-        results = session.execute(
-            "SELECT distinct store_id FROM store_status"
-        )
+        results = session.execute("SELECT distinct store_id FROM store_status")
 
         results = [result[0] for result in results]
 
