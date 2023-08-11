@@ -89,6 +89,17 @@ class StoreDataProcessor:
             ## Using the next time in the sequence as the end period of the particular status
             status_df["status_end_time"] = status_df["time_local"].shift(-1)
             status_df = status_df[status_df["status"] != "closing"]
+
+            def cal_time_diff(row):
+                """
+                Calculate the active/inactive interval duration in minutes
+                """
+                dummy_date = datetime(2023, 1, 1)
+                diff  = datetime.combine(dummy_date, row["status_end_time"]) - datetime.combine(dummy_date, row["time_local"])
+                return diff.total_seconds()/60
+            
+            status_df["time_diff"] = status_df[["status_end_time", "time_local"]].apply(lambda x: cal_time_diff(x), axis=1)
+
             status_df["date_local"] = idx[0]
             status_df["day"] = idx[1]
             processed_dfs.append(status_df)
