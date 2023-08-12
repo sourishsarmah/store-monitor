@@ -66,3 +66,13 @@ And since we don't have any data points for the second shift we will consider th
 - 20:00 to 23:59 -> active  (3 hours)
 ```
 
+
+
+## System Architecture
+
+- Since, report generation is a long running task, we are using a `asyncrohous web-worker architecture`.
+
+- Here we have three components:
+    - `web`: receives request from the user to generate the report and creates a task message and sends it to a queue. Responding back to the user immediately with a `report_id` which can be using to check the status of the task.
+    - `message queue`: recieves messages from the web service and delivers to the worker service.
+    - `worker`: here all the long running processes run and updates the status of the task accoringly.
