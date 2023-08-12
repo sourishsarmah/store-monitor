@@ -9,5 +9,8 @@ def test_celery(word: str) -> str:
 
 @celery_app.task(name="generate_report")
 def generate_report():
-    result = ReportGenerator.process()
+    report_id = generate_report.request.id
+
+    result = ReportGenerator.process(report_id)
+
     return result

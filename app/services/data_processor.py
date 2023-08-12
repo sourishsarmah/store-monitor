@@ -5,7 +5,6 @@ import pandas as pd
 import pytz
 
 from app.crud.store import StoreRepo
-from app.db.session import SessionLocal
 from app.schemas import ReportOutput
 
 warnings.filterwarnings("ignore")
@@ -13,36 +12,33 @@ warnings.filterwarnings("ignore")
 
 class StoreDataProcessor:
     @classmethod
-    def process(cls, current_timestamp) -> ReportOutput:
-        with SessionLocal() as session:
-            store_repo = StoreRepo()
-            store_ids = store_repo.get_all_store_ids(session)
+    def process(cls, session, current_timestamp) -> ReportOutput:
+        store_repo = StoreRepo()
+        store_ids = store_repo.get_all_store_ids(session)
 
-            curr_timstamp_utc = datetime.fromisoformat(current_timestamp).replace(
-                tzinfo=pytz.utc
+        curr_timstamp_utc = datetime.fromisoformat(current_timestamp).replace(
+            tzinfo=pytz.utc
+        )
+
+        for store_id in store_ids:
+            print(f"Processing Store Data for store_id: {store_id}")
+
+            store_hours_data = store_repo.get_working_hours(session, store_id)
+            store_hours_data = cls.__process_working_hours(store_hours_data, store_id)
+            store_status_data = store_repo.get_data_from_id(
+                session, store_id, current_timestamp
             )
 
-            for store_id in store_ids:
-                print(f"Procession Store Data for store_id: {store_id}")
+            store_timezone_str = store_status_data["timezone_str"].iloc[0]
 
-                store_hours_data = store_repo.get_working_hours(session, store_id)
-                store_hours_data = cls.__process_working_hours(
-                    store_hours_data, store_id
-                )
-                store_status_data = store_repo.get_data_from_id(
-                    session, store_id, current_timestamp
-                )
-
-                store_timezone_str = store_status_data["timezone_str"].iloc[0]
-
-                curr_timestamp_local = curr_timstamp_utc.astimezone(
-                    pytz.timezone(store_timezone_str)
-                )
-                processed_data = cls.__process_store_data(
-                    store_status_data, store_hours_data
-                )
-                store_report = cls.extract_info(processed_data, curr_timestamp_local)
-                yield store_report
+            curr_timestamp_local = curr_timstamp_utc.astimezone(
+                pytz.timezone(store_timezone_str)
+            )
+            processed_data = cls.__process_store_data(
+                store_status_data, store_hours_data
+            )
+            store_report = cls.extract_info(processed_data, curr_timestamp_local)
+            yield store_report
 
     @classmethod
     def extract_info(
