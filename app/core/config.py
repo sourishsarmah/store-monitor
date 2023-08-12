@@ -42,6 +42,12 @@ class Settings(BaseSettings):
             path=f"/{values.get('POSTGRES_DB') or ''}",
         )
 
+    # AWS
+    AWS_ACCESS_KEY_ID: str
+    AWS_SECRET_ACCESS_KEY: str
+    S3_BUCKET: str = PROJECT_NAME
+    S3_LINK_EXPIRY_TIME: int = 3600 * 24 * 7  # Expiration time in seconds
+
     class Config:
         case_sensitive = True
 

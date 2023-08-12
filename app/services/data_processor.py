@@ -8,9 +8,13 @@ from app.db.session import SessionLocal
 from app.schemas import ReportOutput
 
 
+import warnings
+warnings.filterwarnings("ignore")
+
+
 class StoreDataProcessor:
     @classmethod
-    def process(cls, current_timestamp):
+    def process(cls, current_timestamp) -> ReportOutput:
         with SessionLocal() as session:
             store_repo = StoreRepo()
             store_ids = store_repo.get_all_store_ids(session)
@@ -230,7 +234,6 @@ class StoreDataProcessor:
         """
         combines multiple working shifts of the store into an aggregated dataframe
         """
-        print(store_working_hours)
         store_agg_hours_df = (
             store_working_hours.groupby(["store_id", "day"]).agg(list).reset_index()
         )
