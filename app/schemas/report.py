@@ -1,4 +1,6 @@
-from pydantic import BaseModel
+from typing import Optional
+
+from pydantic import AnyHttpUrl, BaseModel
 
 from .enum import ReportStatusEnum
 
@@ -9,7 +11,7 @@ class Report(BaseModel):
 
 class ReportResponse(Report):
     status: ReportStatusEnum
-    download_link: str
+    download_link: Optional[AnyHttpUrl]
 
 
 class ReportOutput:
