@@ -12,18 +12,26 @@ class ReportGenerator:
         current_timestamp = "2023-01-25T18:13:22.479"
         # current_timestamp = datetime.utcnow().isoformat()
 
+        download_link = None
+
         with SessionLocal() as session:
             report_repo = ReportRepo()
             report_repo.update_status(session, report_id, ReportStatusEnum.running)
+            try:
+                report_data = [
+                    store_data
+                    for store_data in StoreDataProcessor.process(
+                        session, current_timestamp
+                    )
+                ]
 
-            report_data = [
-                store_data
-                for store_data in StoreDataProcessor.process(session, current_timestamp)
-            ]
+                download_link = CSVUploader(report_id).upload(report_data)
 
-            download_link = CSVUploader(report_id).upload(report_data)
+                report_repo.update_status(session, report_id, ReportStatusEnum.complete)
+                report_repo.update_download_link(session, report_id, download_link)
 
-            report_repo.update_status(session, report_id, ReportStatusEnum.complete)
-            report_repo.update_download_link(session, report_id, download_link)
+            except Exception as e:
+                print("Error: Error while generating report. ", str(e))
+                report_repo.update_status(session, report_id, ReportStatusEnum.failed)
 
         return download_link
