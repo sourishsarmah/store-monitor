@@ -1,3 +1,4 @@
+import warnings
 from datetime import datetime, time, timedelta
 
 import pandas as pd
@@ -7,8 +8,6 @@ from app.crud.store import StoreRepo
 from app.db.session import SessionLocal
 from app.schemas import ReportOutput
 
-
-import warnings
 warnings.filterwarnings("ignore")
 
 
