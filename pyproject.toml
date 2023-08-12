@@ -26,6 +26,7 @@ httpcore = "<=0.15"
 redis = "^4.6.0"
 pandas = "^2.0.3"
 boto3 = "^1.28.25"
+alembic = "^1.11.2"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.770"

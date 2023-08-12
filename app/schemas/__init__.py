@@ -1,2 +1,2 @@
+from .enum import ReportStatusEnum, StoreStatusEnum
 from .report import Report, ReportOutput, ReportResponse
-from .status import StatusEnum

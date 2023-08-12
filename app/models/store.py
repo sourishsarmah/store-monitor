@@ -4,7 +4,7 @@ from sqlalchemy import VARCHAR, BigInteger, Column, DateTime, Enum, Integer, Tim
 from sqlalchemy.sql import func
 
 from app.db.base_class import Base
-from app.schemas import StatusEnum
+from app.schemas import StoreStatusEnum
 
 
 class StoreHours(Base):
@@ -31,7 +31,7 @@ class StoreStatus(Base):
     __tablename__ = "store_status"
     store_id = Column(BigInteger, index=True)
     timestamp_utc = Column(DateTime(timezone=True), nullable=False)
-    status = Column(Enum(StatusEnum))
+    status = Column(Enum(StoreStatusEnum))
     created_at = Column(
         DateTime(timezone=True), server_default=func.now(), default=datetime.utcnow()
     )
