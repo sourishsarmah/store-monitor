@@ -1,6 +1,6 @@
-from typing import Any
-
 from pydantic import BaseModel
+
+from .enum import ReportStatusEnum
 
 
 class Report(BaseModel):
@@ -8,8 +8,8 @@ class Report(BaseModel):
 
 
 class ReportResponse(Report):
-    report_status: str
-    report_result: Any
+    status: ReportStatusEnum
+    download_link: str
 
 
 class ReportOutput:
