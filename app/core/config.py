@@ -22,7 +22,7 @@ class Settings(BaseSettings):
             return v
         raise ValueError(v)
 
-    PROJECT_NAME: str
+    PROJECT_NAME: str = "store-monitor"
 
     POSTGRES_SERVER: str
     POSTGRES_USER: str
