@@ -56,7 +56,7 @@ class StoreDataProcessor:
                 processed_store_data[processed_store_data["status"] == "active"],
                 current_timestamp,
             ),
-            "update_last_week": cls.__extract_last_week_info(
+            "uptime_last_week": cls.__extract_last_week_info(
                 processed_store_data[processed_store_data["status"] == "active"]
             ),
             "downtime_last_hour": downtime_last_hour,
